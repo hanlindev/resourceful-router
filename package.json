@@ -25,5 +25,8 @@
   "dependencies": {
     "express": "^4.13.4",
     "resource-collection": "^1.0.7"
+  },
+  "devDependencies": {
+    "typescript": "^1.8.2"
   }
 }
