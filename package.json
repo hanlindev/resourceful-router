@@ -1,0 +1,28 @@
+{
+  "name": "resourceful-router",
+  "version": "1.0.1",
+  "description": "Resourceful router for express",
+  "main": "lib/resourceful-router.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanlindev/resourceful-router.git"
+  },
+  "keywords": [
+    "express",
+    "router",
+    "resource"
+  ],
+  "author": "Lin Han <hanlin.dev@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hanlindev/resourceful-router/issues"
+  },
+  "homepage": "https://github.com/hanlindev/resourceful-router#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "resource-collection": "^1.0.7"
+  }
+}

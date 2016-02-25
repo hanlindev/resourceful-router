@@ -1,0 +1,9 @@
+{
+  "name": "resourceful-router",
+  "dependencies": {},
+  "devDependencies": {},
+  "ambientDependencies": {
+    "express": "github:DefinitelyTyped/DefinitelyTyped/express/express.d.ts#dd638012d63e069f2c99d06ef4dcc9616a943ee4",
+    "resource-collection": "npm:resource-collection/type-definition/resource-collection.d.ts"
+  }
+}
