@@ -12,10 +12,17 @@ declare module 'resourceful-router' {
             handlerModule: col.ResourceModule<col.ResourceAction>
         ) => void;
 
-        function getResourcefulRouter(
+        interface ResourcefulRouterBuilderConfig {
+          authenticator?: express.RequestHandler;
+        }
+
+        class ResourcefulRouterBuilder {
+          public constructor(config?: ResourcefulRouterBuilderConfig);
+          public build(
             resourceCollection: col.ResourceCollection<col.ResourceAction>
-        ): express.Router;
+          ): express.Router;
+        }
     }
 
-    export = __ResourcefulRouter;
+    export default __ResourcefulRouter.ResourcefulRouterBuilder;
 }

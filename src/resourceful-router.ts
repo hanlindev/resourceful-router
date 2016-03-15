@@ -56,11 +56,22 @@ function routerRegistrator(
     }
 }
 
-export function getResourcefulRouter(
+interface ResourcefulRouterBuilderConfig {
+  // The global authentication middleware
+  authenticator?: express.RequestHandler;
+}
+
+export default class ResourcefulRouterBuilder {
+  public constructor(public config?: ResourcefulRouterBuilderConfig) {}
+
+  build(
     resourceCollection: col.ResourceCollection<col.ResourceAction>
-): express.Router {
-    let result = express.Router();
-    let registrator = routerRegistrator(result, resourceCollection.globalPathPrefix);
+  ): express.Router {
+    let result = this.getDefaultRouter();
+    let registrator = routerRegistrator(
+      result,
+      resourceCollection.globalPathPrefix
+    );
 
     for (let resourceName in resourceCollection.resources) {
         let resource = resourceCollection.resources[resourceName];
@@ -74,4 +85,13 @@ export function getResourcefulRouter(
     }
 
     return result;
+  }
+
+  private getDefaultRouter(): express.Router {
+    let result = express.Router();
+    if (this.config && this.config.authenticator) {
+      result.use(this.config.authenticator);
+    }
+    return result;
+  }
 }
