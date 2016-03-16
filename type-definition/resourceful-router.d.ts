@@ -3,21 +3,31 @@ declare module 'resourceful-router' {
     import express = require('express');
 
     module __ResourcefulRouter {
+        interface IHandlerModule extends col.ResourceModule<col.ResourceAction> {
+            /**
+             * Request handlers to be called before the main handler. They are called in
+             * the same order as they are in the array.
+             * @type {express.RequestHandler[]}
+             */
+            before?: express.RequestHandler[];
+            /**
+             * Similar to before handlers but they are called after the main request
+             * handler.
+             * @type {express.RequestHandler[]}
+             */
+            after?: express.RequestHandler[];
+        }
+
         function routerRegistrator(
             router: express.Router,
             globalPathPrefix: string
         ): (
             resourceName: string,
             endpoint: col.ResourceEndpoint,
-            handlerModule: col.ResourceModule<col.ResourceAction>
+            handlerModule:IHandlerModule
         ) => void;
 
-        interface ResourcefulRouterBuilderConfig {
-          authenticator?: express.RequestHandler;
-        }
-
         class ResourcefulRouterBuilder {
-          public constructor(config?: ResourcefulRouterBuilderConfig);
           public build(
             resourceCollection: col.ResourceCollection<col.ResourceAction>
           ): express.Router;

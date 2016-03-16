@@ -1,6 +1,20 @@
 import * as express from 'express';
 import * as col from 'resource-collection';
 
+interface IHandlerModule extends col.ResourceModule<col.ResourceAction> {
+    /**
+     * Request handlers to be called before the main handler. They are called in
+     * the same order as they are in the array.
+     * @type {express.RequestHandler[]}
+     */
+    before?: express.RequestHandler[];
+    /**
+     * Similar to before handlers but they are called after the main request
+     * handler.
+     * @type {express.RequestHandler[]}
+     */
+    after?: express.RequestHandler[];
+}
 
 function routerRegistrator(
     router: express.Router,
@@ -8,12 +22,12 @@ function routerRegistrator(
 ): (
     resourceName: string,
     endpoint: col.ResourceEndpoint,
-    handlerModule: col.ResourceModule<col.ResourceAction>
+    handlerModule: IHandlerModule
 ) => void {
     return (
         resourceName: string,
         endpoint: col.ResourceEndpoint,
-        handlerModule: col.ResourceModule<col.ResourceAction>
+        handlerModule: IHandlerModule
     ) => {
         let registratorName = '';
         switch (endpoint.method) {
@@ -51,47 +65,34 @@ function routerRegistrator(
             path = globalPathPrefix + path;
         }
         if (registratorName != null) {
-            router[registratorName](path, handlerModule[endpoint.name]);
+            let before = handlerModule.before || [];
+            let after = handlerModule.after || [];
+            router[registratorName](path, ...before, handlerModule[endpoint.name], ...after);
         }
     }
-}
-
-interface ResourcefulRouterBuilderConfig {
-  // The global authentication middleware
-  authenticator?: express.RequestHandler;
 }
 
 export default class ResourcefulRouterBuilder {
-  public constructor(public config?: ResourcefulRouterBuilderConfig) {}
+    build(
+        resourceCollection: col.ResourceCollection<col.ResourceAction>
+    ): express.Router {
+        let result = express.Router();
+        let registrator = routerRegistrator(
+            result,
+            resourceCollection.globalPathPrefix
+        );
 
-  build(
-    resourceCollection: col.ResourceCollection<col.ResourceAction>
-  ): express.Router {
-    let result = this.getDefaultRouter();
-    let registrator = routerRegistrator(
-      result,
-      resourceCollection.globalPathPrefix
-    );
-
-    for (let resourceName in resourceCollection.resources) {
-        let resource = resourceCollection.resources[resourceName];
-        for (let endpointName in resource.endpoints) {
-            registrator(
-                resourceName,
-                resource.endpoints[endpointName],
-                resource.handler
-            );
+        for (let resourceName in resourceCollection.resources) {
+            let resource = resourceCollection.resources[resourceName];
+            for (let endpointName in resource.endpoints) {
+                registrator(
+                    resourceName,
+                    resource.endpoints[endpointName],
+                    resource.handler
+                );
+            }
         }
-    }
 
-    return result;
-  }
-
-  private getDefaultRouter(): express.Router {
-    let result = express.Router();
-    if (this.config && this.config.authenticator) {
-      result.use(this.config.authenticator);
+        return result;
     }
-    return result;
-  }
 }
