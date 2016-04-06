@@ -1,6 +1,6 @@
 {
   "name": "resourceful-router",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Resourceful router for express",
   "main": "lib/resourceful-router.js",
   "scripts": {

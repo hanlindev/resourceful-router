@@ -43,8 +43,8 @@ declare module 'resourceful-router' {
     }
 
     interface IConditionalFilterCreator {
-      except: (actionNames: string[]) => IResourceActionFilter;
-      only: (actionNames: string[]) => IResourceActionFilter;
+      except: (...actionNames: string[]) => IResourceActionFilter;
+      only: (...actionNames: string[]) => IResourceActionFilter;
     }
 
     interface IConditionalFilterFunction {
