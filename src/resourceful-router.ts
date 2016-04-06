@@ -76,11 +76,11 @@ function routerRegistrator(
         }
         if (registratorName != null) {
             let before = filterActionFilters(
-              resourceName,
+              endpoint.name,
               handlerModule.before || []
             );
             let after = filterActionFilters(
-              resourceName,
+              endpoint.name,
               handlerModule.after || []
             );
             router[registratorName](
@@ -94,20 +94,20 @@ function routerRegistrator(
 }
 
 function filterActionFilters(
-  resourceName: string,
+  actionName: string,
   filters: IResourceActionFilter[]
 ): IResourceActionFilter[] {
   return filters.filter(actionFilter => {
     if (
       _.isArray(actionFilter.except) &&
-      actionFilter.except.indexOf(resourceName) >= 0
+      actionFilter.except.indexOf(actionName) >= 0
     ) {
       return false;
     }
 
     if (
       _.isArray(actionFilter.only) &&
-      actionFilter.only.indexOf(resourceName) === -1
+      actionFilter.only.indexOf(actionName) === -1
     ) {
       return false;
     }
