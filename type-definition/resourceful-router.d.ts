@@ -47,12 +47,12 @@ declare module 'resourceful-router' {
       only: (actionNames: string[]) => IResourceActionFilter;
     }
 
-    function conditionalFilter(
-      handler: express.RequestHandler
-    ): IConditionalFilterCreator;
+    interface IConditionalFilterFunction {
+      (handler: express.RequestHandler): IConditionalFilterCreator;
+    }
   }
 
   export default __ResourcefulRouter.ResourcefulRouterBuilder;
   export type IResourceActionFilter = __ResourcefulRouter.IResourceActionFilter;
-  export let conditionalFilter = __ResourcefulRouter.conditionalFilter;
+  export let conditionalFilter: __ResourcefulRouter.IConditionalFilterFunction;
 }
