@@ -4,6 +4,7 @@
   "devDependencies": {},
   "ambientDependencies": {
     "express": "github:DefinitelyTyped/DefinitelyTyped/express/express.d.ts#dd638012d63e069f2c99d06ef4dcc9616a943ee4",
+    "lodash": "registry:dt/lodash#3.10.0+20160330154726",
     "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#cb5206a8ac1c9a3ddfd126f5ecea6729b2361452",
     "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#20e1eb9616922d382d918cc5a21870a9dbe255f5",
     "resource-collection": "npm:resource-collection/type-definition/resource-collection.d.ts",

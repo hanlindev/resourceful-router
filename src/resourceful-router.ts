@@ -1,29 +1,39 @@
 import * as express from 'express';
+import * as _ from 'lodash';
 import * as col from 'resource-collection';
+
+interface IResourceActionFilter extends express.RequestHandler {
+  except?: string[];
+  only?: string[];
+}
 
 interface IHandlerModule extends col.ResourceModule<col.ResourceAction> {
     /**
      * Request handlers to be called before the main handler. They are called in
      * the same order as they are in the array.
-     * @type {express.RequestHandler[]}
+     * @type {ResourceActionFilter[]}
      */
-    before?: express.RequestHandler[];
+    before?: IResourceActionFilter[];
     /**
      * Similar to before handlers but they are called after the main request
      * handler.
-     * @type {express.RequestHandler[]}
+     * @type {ResourceActionFilter[]}
      */
-    after?: express.RequestHandler[];
+    after?: IResourceActionFilter[];
+}
+
+interface IRouterRegistratorFunction {
+  (
+    resourceName: string,
+    endpoint: col.ResourceEndpoint,
+    handlerModule: IHandlerModule
+  ): void;
 }
 
 function routerRegistrator(
     router: express.Router,
     globalPathPrefix: string
-): (
-    resourceName: string,
-    endpoint: col.ResourceEndpoint,
-    handlerModule: IHandlerModule
-) => void {
+): IRouterRegistratorFunction  {
     return (
         resourceName: string,
         endpoint: col.ResourceEndpoint,
@@ -65,11 +75,45 @@ function routerRegistrator(
             path = globalPathPrefix + path;
         }
         if (registratorName != null) {
-            let before = handlerModule.before || [];
-            let after = handlerModule.after || [];
-            router[registratorName](path, ...before, handlerModule[endpoint.name], ...after);
+            let before = filterActionFilters(
+              resourceName,
+              handlerModule.before || []
+            );
+            let after = filterActionFilters(
+              resourceName,
+              handlerModule.after || []
+            );
+            router[registratorName](
+              path,
+              ...before,
+              handlerModule[endpoint.name],
+              ...after
+            );
         }
     }
+}
+
+function filterActionFilters(
+  resourceName: string,
+  filters: IResourceActionFilter[]
+): IResourceActionFilter[] {
+  return filters.filter(actionFilter => {
+    if (
+      _.isArray(actionFilter.except) &&
+      actionFilter.except.indexOf(resourceName) >= 0
+    ) {
+      return false;
+    }
+
+    if (
+      _.isArray(actionFilter.only) &&
+      actionFilter.only.indexOf(resourceName) === -1
+    ) {
+      return false;
+    }
+
+    return true;
+  });
 }
 
 export default class ResourcefulRouterBuilder {
