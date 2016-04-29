@@ -141,21 +141,21 @@ export default class ResourcefulRouterBuilder {
     }
 }
 
-export interface IConditionalFilterCreator {
+export interface IConditionalFilterCreator extends express.RequestHandler {
   except: (...actionNames: string[]) => IResourceActionFilter;
   only: (...actionNames: string[]) => IResourceActionFilter;
 }
 export function conditionalFilter(
   handler: express.RequestHandler
 ): IConditionalFilterCreator {
-  return {
-    except: (...actionNames: string[]) => {
-      handler['except'] = actionNames;
-      return <IResourceActionFilter> handler;
-    },
-    only: (...actionNames: string[]) => {
-      handler['only'] = actionNames;
-      return <IResourceActionFilter> handler;
-    }
+  let result = <IConditionalFilterCreator> handler;
+  result.except = (...actionNames: string[]) => {
+    handler['except'] = actionNames;
+    return <IResourceActionFilter> handler;
   };
+  result.only = (...actionNames: string[]) => {
+    handler['only'] = actionNames;
+    return <IResourceActionFilter> handler;
+  };
+  return result;
 }
