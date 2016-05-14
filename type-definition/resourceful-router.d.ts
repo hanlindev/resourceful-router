@@ -54,5 +54,6 @@ declare module 'resourceful-router' {
 
   export default __ResourcefulRouter.ResourcefulRouterBuilder;
   export type IResourceActionFilter = __ResourcefulRouter.IResourceActionFilter;
+  export type IConditionalFilterCreator = __ResourcefulRouter.IConditionalFilterCreator;
   export let conditionalFilter: __ResourcefulRouter.IConditionalFilterFunction;
 }
