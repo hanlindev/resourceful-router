@@ -3,8 +3,8 @@ import * as _ from 'lodash';
 import * as col from 'resource-collection';
 
 interface IResourceActionFilter extends express.RequestHandler {
-  except?: string[];
-  only?: string[];
+  exceptActions?: string[];
+  onlyActions?: string[];
 }
 
 interface IHandlerModule extends col.ResourceModule<col.ResourceAction> {
@@ -99,15 +99,15 @@ function filterActionFilters(
 ): IResourceActionFilter[] {
   return filters.filter(actionFilter => {
     if (
-      _.isArray(actionFilter.except) &&
-      actionFilter.except.indexOf(actionName) >= 0
+      _.isArray(actionFilter.exceptActions) &&
+      actionFilter.exceptActions.indexOf(actionName) >= 0
     ) {
       return false;
     }
 
     if (
-      _.isArray(actionFilter.only) &&
-      actionFilter.only.indexOf(actionName) === -1
+      _.isArray(actionFilter.onlyActions) &&
+      actionFilter.onlyActions.indexOf(actionName) === -1
     ) {
       return false;
     }
@@ -144,17 +144,19 @@ export default class ResourcefulRouterBuilder {
 export interface IConditionalFilterCreator extends express.RequestHandler {
   except: (...actionNames: string[]) => IResourceActionFilter;
   only: (...actionNames: string[]) => IResourceActionFilter;
+  exceptActions?: Array<string>;
+  onlyActions?: Array<string>;
 }
 export function conditionalFilter(
   handler: express.RequestHandler
 ): IConditionalFilterCreator {
   let result = <IConditionalFilterCreator> handler;
   result.except = (...actionNames: string[]) => {
-    handler['except'] = actionNames;
+    handler['exceptActions'] = actionNames;
     return <IResourceActionFilter> handler;
   };
   result.only = (...actionNames: string[]) => {
-    handler['only'] = actionNames;
+    handler['onlyActions'] = actionNames;
     return <IResourceActionFilter> handler;
   };
   return result;

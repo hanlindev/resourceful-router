@@ -4,8 +4,8 @@ declare module 'resourceful-router' {
 
   module __ResourcefulRouter {
     interface IResourceActionFilter extends express.RequestHandler {
-      except?: string[];
-      only?: string[];
+      exceptActions?: string[];
+      onlyActions?: string[];
     }
 
     interface IHandlerModule extends col.ResourceModule<col.ResourceAction> {
@@ -45,6 +45,9 @@ declare module 'resourceful-router' {
     interface IConditionalFilterCreator extends express.RequestHandler {
       except: (...actionNames: string[]) => IResourceActionFilter;
       only: (...actionNames: string[]) => IResourceActionFilter;
+      exceptActions?: Array<string>;
+      onlyActions?: Array<string>;
+    }
     }
 
     interface IConditionalFilterFunction {
