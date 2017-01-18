@@ -1,8 +1,9 @@
 {
   "name": "resourceful-router",
-  "version": "1.5.0",
+  "version": "1.6.1",
   "description": "Resourceful router for express",
   "main": "lib/resourceful-router.js",
+  "types": "./type-definition/resourceful-router.d.ts",
   "scripts": {
     "test": "mocha",
     "prepublish": "tsc"

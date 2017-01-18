@@ -48,7 +48,6 @@ declare module 'resourceful-router' {
       exceptActions?: Array<string>;
       onlyActions?: Array<string>;
     }
-    }
 
     interface IConditionalFilterFunction {
       (handler: express.RequestHandler): IConditionalFilterCreator;
