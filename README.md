@@ -1,6 +1,6 @@
 Resourceful Router
 =========
-A routing middleware for Express that consumes [`reacource-collection`](https://github.com/hanlindev/resource-collection).
+A powerful yet minimalistic routing middleware for Express that consumes [`reacource-collection`](https://github.com/hanlindev/resource-collection). Enjoy RESTful paths without compromising the micro-ness of Express.
 
 ## Installation
 
